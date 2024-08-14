@@ -27,26 +27,6 @@ async function run() {
         await console.log(`Target: ${target}`);
         await console.log(`SHA: ${sha}`);
 
-        let githubRepoOwner = github.context.payload.repository.owner.login;
-        await console.log('Checking if the user is a sponsor [' + githubRepoOwner + ']');
-
-        try {
-            // Check if the user is a sponsor
-            const isSponsor = await axios.post('https://deployrepository.com/api/check-github-sponsorship', {
-                github_username: githubRepoOwner
-            });
-
-            console.log('thanks for sponsoring us :)');
-        } catch (error) {
-            if (error.response && error.response.status === 403) {
-                throw new Error("You are not a sponsor, Please consider sponsoring us to use this action, https://github.com/sponsors/DeployRepository , Start sponsoring us and try again [1$ or more]");
-            } else if (error.response && error.response.status === 500) {
-                console.error("An error occurred while checking sponsorship, but the deployment will continue.");
-            } else {
-                throw error;
-            }
-        }
-
         console.log("Connecting to the server...");
 
         await ssh.connect({
